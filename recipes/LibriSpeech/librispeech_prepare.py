@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Data preparation.
 
@@ -8,6 +10,7 @@ Author
 Mirco Ravanelli, Ju-Chieh Chou, Loren Lugosch 2020
 """
 
+import argparse
 import os
 import csv
 import random
@@ -425,3 +428,30 @@ def check_librispeech_folders(data_folder, splits):
                 "Librispeech dataset)" % split_folder
             )
             raise OSError(err_msg)
+
+
+def get_args():
+    parser = argparse.ArgumentParser("data prep for librispeech")
+    parser.add_argument("data_folder", type=str)
+    parser.add_argument("save_folder", type=str)
+    parser.add_argument("--tr_splits", nargs="+", default=[])
+    parser.add_argument("--dev_splits", nargs="+", default=[])
+    parser.add_argument("--te_splits", nargs="+", default=[])    
+    parser.add_argument("--select_n_sentences", type=int, default=None)
+    parser.add_argument("--merge_lst", nargs="+", default=[])
+    parser.add_argument("--merge_name", type=str, default=None)
+    parser.add_argument("--create_lexicon", type=bool, default=False)
+    parser.add_argument("--skip_prep", type=bool, default=False)
+    args = parser.parse_args()
+    return args
+
+
+if __name__ == "__main__":
+    args = get_args()
+    prepare_librispeech(
+        args.data_folder, args.save_folder, \
+        tr_splits=args.tr_splits, dev_splits=args.dev_splits, te_splits=args.te_splits, \
+        select_n_sentences=args.select_n_sentences, \
+        merge_lst=args.merge_lst, merge_name=args.merge_name, \
+        create_lexicon=args.create_lexicon, skip_prep=args.skip_prep
+    )
